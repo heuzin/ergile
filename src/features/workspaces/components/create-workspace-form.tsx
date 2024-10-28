@@ -2,7 +2,9 @@
 
 import { z } from "zod";
 import { useRef } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
+import { ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -24,11 +26,10 @@ import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { DottedSeparator } from "@/src/components/detted-separator";
 
+import { cn } from "@/src/lib/utils";
 import { createWorkspaceSchema } from "../schemas";
 import { useCreateWorkspace } from "../api/use-create-workspace";
-import Image from "next/image";
 import { Avatar, AvatarFallback } from "@/src/components/ui/avatar";
-import { ImageIcon } from "lucide-react";
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void;
@@ -161,6 +162,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 variant={"secondary"}
                 onClick={onCancel}
                 disabled={isPending}
+                className={cn(!onCancel && "invisible")}
               >
                 Cancel
               </Button>
