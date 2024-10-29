@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 
-import { getCurrentUser } from "@/src/features/auth/actions";
+import { getCurrentUser } from "@/src/features/auth/queries";
 
 import { CreateWorkspaceForm } from "@/src/features/workspaces/components/create-workspace-form";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 
-import { getCurrentUser } from "@/src/features/auth/actions";
+import { getCurrentUser } from "@/src/features/auth/queries";
 
 const WorkspaceIdPage = async () => {
   const user = await getCurrentUser();

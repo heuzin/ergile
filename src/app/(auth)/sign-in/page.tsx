@@ -2,7 +2,7 @@ import React from "react";
 import { redirect } from "next/navigation";
 
 import { SignInCard } from "@/src/features/auth/components/sign-in-card";
-import { getCurrentUser } from "@/src/features/auth/actions";
+import { getCurrentUser } from "@/src/features/auth/queries";
 
 const SignInPage = async () => {
   const user = await getCurrentUser();
