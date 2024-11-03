@@ -9,6 +9,7 @@ import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/src/config";
 import { Project } from "../../projects/types";
 import { createTaskSchema, getTaskSchema } from "../schemas";
 
+import { Task } from "../type";
 import { getMember } from "../../members/utils";
 
 const app = new Hono()
@@ -63,7 +64,11 @@ const app = new Hono()
         query.push(Query.search("name", search));
       }
 
-      const tasks = await databases.listDocuments(DATABASE_ID, TASKS_ID, query);
+      const tasks = await databases.listDocuments<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        query
+      );
 
       const projectIds = tasks.documents.map((task) => task.projectId);
       const assigneeIds = tasks.documents.map((task) => task.assigneeId);
