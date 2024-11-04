@@ -11,7 +11,7 @@ import {
 } from "@/src/components/ui/tabs";
 import { DottedSeparator } from "@/src/components/detted-separator";
 import { useCreateTaskModal } from "../hooks/use-create-task-modal";
-import { useGetTasks } from "../api/use-get-task";
+import { useGetTasks } from "../api/use-get-tasks";
 import { useWorkspaceId } from "../../workspaces/hooks/use-workspace-id";
 import { DataFilters } from "./data-filters";
 import { useTaskFilters } from "../hooks/use-task-filters";

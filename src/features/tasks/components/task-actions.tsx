@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 import {
@@ -9,6 +10,8 @@ import {
 
 import { useConfirm } from "@/src/hooks/use-confirm";
 import { useDeleteTask } from "../api/use-delete-task";
+import { useEditTaskModal } from "../hooks/use-edit-task-modal";
+import { useWorkspaceId } from "../../workspaces/hooks/use-workspace-id";
 
 interface TaskActionsProps {
   id: string;
@@ -17,6 +20,11 @@ interface TaskActionsProps {
 }
 
 export const TaskActions = ({ id, projectId, children }: TaskActionsProps) => {
+  const workspaceId = useWorkspaceId();
+  const router = useRouter();
+
+  const { open } = useEditTaskModal();
+
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete task",
     "This action cannot be undone.",
@@ -30,6 +38,15 @@ export const TaskActions = ({ id, projectId, children }: TaskActionsProps) => {
 
     mutate({ param: { taskId: id } });
   };
+
+  const onOpenTask = () => {
+    router.push(`/workspaces/${workspaceId}/task/${id}`);
+  };
+
+  const onOpenProject = () => {
+    router.push(`/workspaces/${workspaceId}/projects/${projectId}`);
+  };
+
   return (
     <div className="flex justify-end">
       <ConfirmDialog />
@@ -37,24 +54,21 @@ export const TaskActions = ({ id, projectId, children }: TaskActionsProps) => {
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem
-            onClick={() => {}}
-            disabled={false}
+            onClick={onOpenTask}
             className="font-medium p-[10px] cursor-pointer"
           >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Task Details
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => {}}
-            disabled={false}
+            onClick={onOpenProject}
             className="font-medium p-[10px] cursor-pointer"
           >
             <ExternalLinkIcon className="size-4 mr-2 stroke-2" />
             Open Project
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => {}}
-            disabled={false}
+            onClick={() => open(id)}
             className="font-medium p-[10px] cursor-pointer"
           >
             <PencilIcon className="size-4 mr-2 stroke-2" />
