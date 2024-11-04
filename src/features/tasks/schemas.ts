@@ -19,3 +19,13 @@ export const getTaskSchema = z.object({
   search: z.string().nullish(),
   dueDate: z.string().nullish(),
 });
+
+export const taskBuilkUpdate = z.object({
+  tasks: z.array(
+    z.object({
+      $id: z.string(),
+      status: z.nativeEnum(TasksStatus),
+      position: z.number().int().positive().min(1000).max(1_000_000),
+    })
+  ),
+});

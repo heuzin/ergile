@@ -7,7 +7,7 @@ import { sessionMiddleware } from "@/src/lib/session-midleware";
 import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/src/config";
 
 import { Project } from "../../projects/types";
-import { createTaskSchema, getTaskSchema } from "../schemas";
+import { createTaskSchema, getTaskSchema, taskBuilkUpdate } from "../schemas";
 
 import { Task } from "../type";
 import { getMember } from "../../members/utils";
@@ -292,6 +292,60 @@ const app = new Hono()
         assignee,
       },
     });
-  });
+  })
+  .post(
+    "/bulk-update",
+    sessionMiddleware,
+    zValidator("json", taskBuilkUpdate),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const { tasks } = c.req.valid("json");
+
+      const tasksToUpdate = await databases.listDocuments<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        [
+          Query.contains(
+            "$id",
+            tasks.map((task) => task.$id)
+          ),
+        ]
+      );
+
+      const workspaceIds = new Set(
+        tasksToUpdate.documents.map((task) => task.workspaceId)
+      );
+      if (workspaceIds.size !== 1) {
+        return c.json({ error: "All tasks must belong to the same workpace" });
+      }
+
+      const workspaceId = workspaceIds.values().next().value;
+
+      if (!workspaceId) return;
+
+      const member = await getMember({
+        databases,
+        workspaceId,
+        userId: user.$id,
+      });
+
+      if (!member) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const updatedTasks = await Promise.all(
+        tasks.map(async (task) => {
+          const { $id, status, position } = task;
+          return databases.updateDocument<Task>(DATABASE_ID, TASKS_ID, $id, {
+            status,
+            position,
+          });
+        })
+      );
+
+      return c.json({ data: updatedTasks });
+    }
+  );
 
 export default app;
