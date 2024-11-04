@@ -11,6 +11,7 @@ export enum TasksStatus {
 export type Task = Models.Document & {
   name: string;
   status: TasksStatus;
+  workspaceId: string;
   assigneeId: string;
   projectId: string;
   position: number;
