@@ -1,58 +1,16 @@
 import React from "react";
-import Link from "next/link";
-import { PencilIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import { Button } from "@/src/components/ui/button";
 import { getCurrentUser } from "@/src/features/auth/queries";
-import { getProject } from "@/src/features/projects/queries";
-import { ProjectAvatar } from "@/src/features/projects/components/project-avatar";
-import { TaskViewSwitcher } from "@/src/features/tasks/components/task-view-switcher";
 
-interface ProjectIdPageProps {
-  params: {
-    projectId: string;
-  };
-}
+import { ProjectIdClient } from "./client";
 
-const ProjectIdPage = async ({ params }: ProjectIdPageProps) => {
+const ProjectIdPage = async () => {
   const user = await getCurrentUser();
 
   if (!user) redirect("/sign-in");
 
-  const initialValues = await getProject({
-    projectId: params.projectId,
-  });
-
-  if (!initialValues) {
-    throw new Error("Project not found");
-  }
-
-  return (
-    <div className="flex flex-col gap-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-x-2">
-          <ProjectAvatar
-            name={initialValues.name}
-            image={initialValues.imageUrl}
-            className="size-8"
-          />
-          <p className="text-lf font-semibold">{initialValues.name}</p>
-        </div>
-        <div>
-          <Button variant={"secondary"} size={"sm"} asChild>
-            <Link
-              href={`/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}/settings`}
-            >
-              <PencilIcon className="size-4 mr-2" />
-              Edit Project
-            </Link>
-          </Button>
-        </div>
-      </div>
-      <TaskViewSwitcher hideProjectFilter />
-    </div>
-  );
+  return <ProjectIdClient />;
 };
 
 export default ProjectIdPage;

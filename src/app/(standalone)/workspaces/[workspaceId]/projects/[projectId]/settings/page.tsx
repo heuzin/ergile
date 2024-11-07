@@ -1,29 +1,14 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/src/features/auth/queries";
-import { getProject } from "@/src/features/projects/queries";
-import { EditProjectForm } from "@/src/features/projects/components/edit-project-form";
+import { ProjectIdSettingsClient } from "./client";
 
-interface ProjectIdSettingsPageProps {
-  params: { projectId: string };
-}
-
-const ProjectIdSettingsPage = async ({
-  params,
-}: ProjectIdSettingsPageProps) => {
+const ProjectIdSettingsPage = async () => {
   const user = await getCurrentUser();
 
   if (!user) redirect("/sign-in");
 
-  const initialValues = await getProject({
-    projectId: params.projectId,
-  });
-
-  return (
-    <div>
-      <EditProjectForm initialValues={initialValues} />
-    </div>
-  );
+  return <ProjectIdSettingsClient />;
 };
 
 export default ProjectIdSettingsPage;
