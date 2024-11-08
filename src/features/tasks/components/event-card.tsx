@@ -7,10 +7,11 @@ import { Project } from "../../projects/types";
 import { MemberAvatar } from "../../members/components/member-avatar";
 import { ProjectAvatar } from "../../projects/components/project-avatar";
 import { useWorkspaceId } from "../../workspaces/hooks/use-workspace-id";
+import { Member } from "../../members/types";
 
 interface EventCardProps {
   title: string;
-  assignee: any;
+  assignee: Member;
   project: Project;
   status: TasksStatus;
   id: string;

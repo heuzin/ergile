@@ -22,6 +22,7 @@ import { DataKanban } from "./data-kanban";
 import { TasksStatus } from "../type";
 import { useBulkUpdateTasks } from "../api/use-bulk-updateTasks";
 import { DataCalendar } from "./data-calendar";
+import { useProjectId } from "../../projects/hooks/use-project-id";
 
 interface TaskViewSwitcherProps {
   hideProjectFilter?: boolean;
@@ -35,10 +36,11 @@ export const TaskViewSwitcher = ({
     defaultValue: "table",
   });
   const workspaceId = useWorkspaceId();
+  const paramProjectId = useProjectId();
 
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
-    projectId,
+    projectId: paramProjectId || projectId,
     assigneeId,
     status,
     dueDate,
@@ -48,7 +50,7 @@ export const TaskViewSwitcher = ({
   const { mutate: bulkUpdate } = useBulkUpdateTasks();
 
   const onKanbanChange = useCallback(
-    (tasks: { $id: string; status: TasksStatus; position: number }) => {
+    (tasks: { $id: string; status: TasksStatus; position: number }[]) => {
       bulkUpdate({
         json: { tasks },
       });

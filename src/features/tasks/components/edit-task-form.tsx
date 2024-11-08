@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { cn } from "@/src/lib/utils";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -36,7 +35,6 @@ import { ProjectAvatar } from "../../projects/components/project-avatar";
 
 import { Task, TasksStatus } from "../type";
 import { createTaskSchema } from "../schemas";
-import { useWorkspaceId } from "../../workspaces/hooks/use-workspace-id";
 import { useUpdateTask } from "../api/use-update-task";
 
 interface EditTaskFormProps {
@@ -52,8 +50,6 @@ export const EditTaskForm = ({
   memberOptions,
   initialValues,
 }: EditTaskFormProps) => {
-  const router = useRouter();
-  const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useUpdateTask();
 
   const form = useForm<z.infer<typeof createTaskSchema>>({
